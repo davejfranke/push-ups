@@ -8,58 +8,98 @@
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
-      margin: 0;
-      background: #f4f4f4;
-    }
-    .container {
-      max-width: 400px;
+      max-width: 500px;
       margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      background-color: #f9f9f9;
     }
-    input, select, button {
+
+    h1 {
+      text-align: center;
+    }
+
+    label, p {
+      font-size: 1.1em;
+    }
+
+    input[type="number"] {
       width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      font-size: 16px;
+      padding: 8px;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      box-sizing: border-box;
     }
-    input[type=number]::-webkit-inner-spin-button,
-    input[type=number]::-webkit-outer-spin-button {
+
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 1.1em;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 1.3em;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .gender-toggle {
+      margin: 10px 0;
+      text-align: center;
+    }
+
+    .gender-toggle input {
+      margin-right: 5px;
+    }
+
+    small {
+      display: block;
+      margin-bottom: 15px;
+      color: #555;
+    }
+
+    /* Remove number input arrows */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
       -webkit-appearance: none;
       margin: 0;
     }
-    .gender-toggle {
-      display: flex;
-      justify-content: space-between;
-    }
-    .gender-toggle label {
-      flex: 1;
-      text-align: center;
-    }
-    .gender-toggle input {
-      width: auto;
-      margin: 0 5px;
+
+    input[type=number] {
+      -moz-appearance: textfield;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Push-Up Strength Calculator</h1>
-    <div class="gender-toggle">
-      <label><input type="radio" name="gender" value="male" checked> Male</label>
-      <label><input type="radio" name="gender" value="female"> Female</label>
-    </div>
-    <label for="age">Age:</label>
-    <input type="number" id="age" placeholder="e.g. 40" min="15" max="90" />
-    
-    <label for="pushups">Push-Ups:</label>
-    <input type="number" id="pushups" placeholder="e.g. 35" />
+  <h1>Push-Up Strength Calculator</h1>
 
-    <button onclick="evaluate()">Evaluate</button>
-    <p id="result"></p>
+  <p>Enter your age and how many push-ups you can do in one set:</p>
+
+  <label for="age">Age:</label>
+  <input type="number" id="age" placeholder="e.g. 34" min="15" max="90"/>
+
+  <label for="pushups">Push-Ups (in a row, one set):</label>
+  <input type="number" id="pushups" placeholder="e.g. 25"/>
+  <small>How many push-ups you can do consecutively without stopping.</small>
+
+  <div class="gender-toggle">
+    <input type="radio" name="gender" value="male" id="male" checked>
+    <label for="male">Male</label>
+    <input type="radio" name="gender" value="female" id="female">
+    <label for="female">Female</label>
   </div>
+
+  <button>Evaluate</button>
+
+  <p id="result"></p>
 
   <script>
     const maleStandards = {
@@ -102,21 +142,27 @@
 
     function interpolate(age, standards) {
       const ages = Object.keys(standards).map(Number).sort((a, b) => a - b);
+
       if (standards[age]) return standards[age];
 
-      const lower = Math.max(...ages.filter(a => a <= age));
-      const upper = Math.min(...ages.filter(a => a >= age));
+      let lower = ages[0];
+      let upper = ages[ages.length - 1];
 
-      if (lower === upper) return standards[lower];
-
-      const range = upper - lower;
-      const ratio = (age - lower) / range;
+      for (let i = 0; i < ages.length - 1; i++) {
+        if (age > ages[i] && age < ages[i + 1]) {
+          lower = ages[i];
+          upper = ages[i + 1];
+          break;
+        }
+      }
 
       const result = {};
-      for (let level in standards[lower]) {
-        const lowerVal = standards[lower][level];
-        const upperVal = standards[upper][level];
-        result[level] = Math.round(lowerVal + ratio * (upperVal - lowerVal));
+      for (let key in standards[lower]) {
+        const lowVal = standards[lower][key];
+        const highVal = standards[upper][key];
+        result[key] = Math.round(
+          lowVal + ((highVal - lowVal) * (age - lower)) / (upper - lower)
+        );
       }
       return result;
     }
@@ -144,15 +190,19 @@
       const standardSet = gender === "male" ? maleStandards : femaleStandards;
       const ageBracket = interpolate(age, standardSet);
 
-      let level = "Below Weak";
+      let level = "";
+
       if (reps >= ageBracket.Elite) level = "Badass";
       else if (reps >= ageBracket.Advanced) level = "Exceeding Expectations";
       else if (reps >= ageBracket.Intermediate) level = "Average Joe";
       else if (reps >= ageBracket.Novice) level = "Improving";
       else if (reps >= ageBracket.Beginner) level = "Weak";
+      else level = "Below Weak";
 
       document.getElementById("result").innerText = `Your push-up level is: ${level}`;
     }
+
+    document.querySelector("button").addEventListener("click", evaluate);
   </script>
 </body>
 </html>
