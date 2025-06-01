@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Push-Up Strength Level</title>
   <style>
     body {
@@ -10,37 +11,88 @@
       margin: auto;
       padding: 20px;
     }
+
+    h1 {
+      text-align: center;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 15px;
+    }
+
     label {
-      display: inline-block;
-      width: 100px;
+      margin-bottom: 5px;
+      font-weight: bold;
     }
-    input, select {
-      width: 100px;
+
+    input {
+      padding: 10px;
+      font-size: 16px;
     }
+
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
       -webkit-appearance: none;
       margin: 0;
     }
+
     input[type=number] {
       -moz-appearance: textfield;
     }
+
     button {
-      padding: 5px 15px;
+      width: 100%;
+      padding: 12px;
+      font-size: 18px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
     #result {
+      margin-top: 20px;
+      font-size: 18px;
+      text-align: center;
       font-weight: bold;
-      margin-top: 15px;
+    }
+
+    @media (max-width: 500px) {
+      body {
+        padding: 10px;
+      }
+
+      button {
+        font-size: 16px;
+      }
+
+      #result {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
 <body>
   <h1>Push-Up Strength Calculator</h1>
   <p>Enter your age and how many push-ups you can do in one set:</p>
-  <label for="age">Age: </label>
-  <input type="number" id="age"><br><br>
-  <label for="pushups">Push-Ups: </label>
-  <input type="number" id="pushups"><br><br>
+
+  <div class="form-group">
+    <label for="age">Age:</label>
+    <input type="number" id="age" inputmode="numeric">
+  </div>
+
+  <div class="form-group">
+    <label for="pushups">Push-Ups:</label>
+    <input type="number" id="pushups" inputmode="numeric">
+  </div>
+
   <button>Evaluate</button>
   <p id="result"></p>
 
