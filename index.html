@@ -1,24 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Push-Up Strength Calculator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
+      margin: 0;
       max-width: 500px;
       margin: auto;
-      background-color: #f9f9f9;
     }
 
     h1 {
       text-align: center;
+      font-size: 1.8rem;
     }
 
     label, p {
-      font-size: 1.1em;
+      font-size: 1rem;
     }
 
     input[type="number"] {
@@ -27,77 +29,63 @@
       margin-top: 5px;
       margin-bottom: 15px;
       box-sizing: border-box;
+      font-size: 16px; /* Prevent mobile zooming */
     }
 
     button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
       width: 100%;
-      padding: 12px;
-      font-size: 1.1em;
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      border-radius: 5px;
+      margin-bottom: 15px;
+    }
+
+    #gender-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .gender-btn {
+      flex: 1;
+      margin: 0 5px;
+      padding: 10px;
+      font-size: 1rem;
+      background-color: #f0f0f0;
+      border: 1px solid #ccc;
       cursor: pointer;
     }
 
-    button:hover {
-      background-color: #0056b3;
+    .selected {
+      background-color: #007BFF;
+      color: white;
+      border-color: #007BFF;
     }
 
     #result {
-      margin-top: 20px;
-      font-size: 1.3em;
+      font-size: 1.2rem;
       font-weight: bold;
       text-align: center;
-    }
-
-    .gender-toggle {
-      margin: 10px 0;
-      text-align: center;
-    }
-
-    .gender-toggle input {
-      margin-right: 5px;
-    }
-
-    small {
-      display: block;
-      margin-bottom: 15px;
-      color: #555;
-    }
-
-    /* Remove number input arrows */
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-
-    input[type=number] {
-      -moz-appearance: textfield;
     }
   </style>
 </head>
 <body>
+
   <h1>Push-Up Strength Calculator</h1>
+  <p>Enter your age and how many push-ups you can do <strong>in a row (one set)</strong>:</p>
 
-  <p>Enter your age and how many push-ups you can do in one set:</p>
+  <label for="age">Age: </label>
+  <input type="number" id="age" min="15" max="90">
 
-  <label for="age">Age:</label>
-  <input type="number" id="age" placeholder="e.g. 34" min="15" max="90"/>
+  <label for="pushups">Push-Ups: </label>
+  <input type="number" id="pushups">
 
-  <label for="pushups">Push-Ups (in a row, one set):</label>
-  <input type="number" id="pushups" placeholder="e.g. 25"/>
-  <small>How many push-ups you can do consecutively without stopping.</small>
-
-  <div class="gender-toggle">
-    <input type="radio" name="gender" value="male" id="male" checked>
-    <label for="male">Male</label>
-    <input type="radio" name="gender" value="female" id="female">
-    <label for="female">Female</label>
+  <div id="gender-buttons">
+    <button id="maleBtn" class="gender-btn selected">Male</button>
+    <button id="femaleBtn" class="gender-btn">Female</button>
   </div>
 
-  <button>Evaluate</button>
+  <button id="evaluateBtn">Evaluate</button>
 
   <p id="result"></p>
 
@@ -122,87 +110,70 @@
     };
 
     const femaleStandards = {
-      15: { Beginner: 1, Novice: 1, Intermediate: 12, Advanced: 27, Elite: 43 },
-      20: { Beginner: 1, Novice: 5, Intermediate: 18, Advanced: 35, Elite: 54 },
-      25: { Beginner: 1, Novice: 5, Intermediate: 19, Advanced: 37, Elite: 56 },
-      30: { Beginner: 1, Novice: 5, Intermediate: 19, Advanced: 37, Elite: 56 },
-      35: { Beginner: 1, Novice: 5, Intermediate: 19, Advanced: 37, Elite: 56 },
-      40: { Beginner: 1, Novice: 5, Intermediate: 19, Advanced: 37, Elite: 56 },
-      45: { Beginner: 1, Novice: 4, Intermediate: 16, Advanced: 33, Elite: 51 },
-      50: { Beginner: 1, Novice: 1, Intermediate: 14, Advanced: 29, Elite: 46 },
-      55: { Beginner: 1, Novice: 1, Intermediate: 10, Advanced: 25, Elite: 41 },
-      60: { Beginner: 1, Novice: 1, Intermediate: 8, Advanced: 20, Elite: 35 },
-      65: { Beginner: 1, Novice: 1, Intermediate: 5, Advanced: 15, Elite: 28 },
-      70: { Beginner: 1, Novice: 1, Intermediate: 1, Advanced: 11, Elite: 22 },
-      75: { Beginner: 1, Novice: 1, Intermediate: 1, Advanced: 7, Elite: 17 },
-      80: { Beginner: 1, Novice: 1, Intermediate: 1, Advanced: 4, Elite: 12 },
-      85: { Beginner: 1, Novice: 1, Intermediate: 1, Advanced: 1, Elite: 9 },
-      90: { Beginner: 1, Novice: 1, Intermediate: 1, Advanced: 1, Elite: 5 }
+      15: { Beginner: 1, Novice: 6, Intermediate: 15, Advanced: 28, Elite: 41 },
+      20: { Beginner: 1, Novice: 8, Intermediate: 19, Advanced: 33, Elite: 46 },
+      25: { Beginner: 1, Novice: 9, Intermediate: 20, Advanced: 34, Elite: 48 },
+      30: { Beginner: 1, Novice: 9, Intermediate: 20, Advanced: 34, Elite: 48 },
+      35: { Beginner: 1, Novice: 9, Intermediate: 20, Advanced: 34, Elite: 48 },
+      40: { Beginner: 1, Novice: 9, Intermediate: 20, Advanced: 34, Elite: 48 },
+      45: { Beginner: 1, Novice: 8, Intermediate: 18, Advanced: 31, Elite: 44 },
+      50: { Beginner: 1, Novice: 7, Intermediate: 16, Advanced: 28, Elite: 40 },
+      55: { Beginner: 1, Novice: 6, Intermediate: 14, Advanced: 24, Elite: 36 },
+      60: { Beginner: 1, Novice: 5, Intermediate: 12, Advanced: 21, Elite: 32 },
+      65: { Beginner: 1, Novice: 4, Intermediate: 10, Advanced: 18, Elite: 28 },
+      70: { Beginner: 1, Novice: 3, Intermediate: 8, Advanced: 15, Elite: 24 },
+      75: { Beginner: 1, Novice: 2, Intermediate: 6, Advanced: 12, Elite: 20 },
+      80: { Beginner: 1, Novice: 2, Intermediate: 4, Advanced: 10, Elite: 17 },
+      85: { Beginner: 1, Novice: 1, Intermediate: 3, Advanced: 8, Elite: 14 },
+      90: { Beginner: 1, Novice: 1, Intermediate: 2, Advanced: 6, Elite: 12 }
     };
 
-    function interpolate(age, standards) {
-      const ages = Object.keys(standards).map(Number).sort((a, b) => a - b);
+    let selectedGender = 'male';
 
-      if (standards[age]) return standards[age];
+    document.getElementById("maleBtn").addEventListener("click", function () {
+      selectedGender = 'male';
+      this.classList.add("selected");
+      document.getElementById("femaleBtn").classList.remove("selected");
+    });
 
-      let lower = ages[0];
-      let upper = ages[ages.length - 1];
+    document.getElementById("femaleBtn").addEventListener("click", function () {
+      selectedGender = 'female';
+      this.classList.add("selected");
+      document.getElementById("maleBtn").classList.remove("selected");
+    });
 
-      for (let i = 0; i < ages.length - 1; i++) {
-        if (age > ages[i] && age < ages[i + 1]) {
-          lower = ages[i];
-          upper = ages[i + 1];
-          break;
-        }
+    document.getElementById("evaluateBtn").addEventListener("click", function () {
+      const ageInput = parseInt(document.getElementById("age").value);
+      const pushups = parseInt(document.getElementById("pushups").value);
+
+      if (isNaN(ageInput) || isNaN(pushups)) {
+        document.getElementById("result").innerText = "Please enter valid numbers.";
+        return;
       }
 
-      const result = {};
-      for (let key in standards[lower]) {
-        const lowVal = standards[lower][key];
-        const highVal = standards[upper][key];
-        result[key] = Math.round(
-          lowVal + ((highVal - lowVal) * (age - lower)) / (upper - lower)
-        );
+      if (pushups > 100) {
+        document.getElementById("result").innerText = "You're superhuman. You've broken the calculator!";
+        return;
       }
-      return result;
-    }
 
-    function evaluate() {
-      const age = parseInt(document.getElementById("age").value);
-      const reps = parseInt(document.getElementById("pushups").value);
-      const gender = document.querySelector('input[name="gender"]:checked').value;
+      const baseAge = Math.floor(ageInput / 5) * 5;
+      const standards = selectedGender === 'male' ? maleStandards : femaleStandards;
+      const ageBracket = standards[baseAge];
 
-      if (isNaN(age) || age < 15 || age > 90) {
+      if (!ageBracket) {
         document.getElementById("result").innerText = "Please enter an age between 15 and 90.";
         return;
       }
 
-      if (isNaN(reps) || reps < 0) {
-        document.getElementById("result").innerText = "Please enter a valid number of push-ups.";
-        return;
-      }
-
-      if (reps > 100) {
-        document.getElementById("result").innerText = "You are superhuman and have broken the calculator!";
-        return;
-      }
-
-      const standardSet = gender === "male" ? maleStandards : femaleStandards;
-      const ageBracket = interpolate(age, standardSet);
-
-      let level = "";
-
-      if (reps >= ageBracket.Elite) level = "Badass";
-      else if (reps >= ageBracket.Advanced) level = "Exceeding Expectations";
-      else if (reps >= ageBracket.Intermediate) level = "Average Joe";
-      else if (reps >= ageBracket.Novice) level = "Improving";
-      else if (reps >= ageBracket.Beginner) level = "Weak";
-      else level = "Below Weak";
+      let level = "Below Weak";
+      if (pushups >= ageBracket.Elite) level = "Badass";
+      else if (pushups >= ageBracket.Advanced) level = "Exceeding Expectations";
+      else if (pushups >= ageBracket.Intermediate) level = "Average Joe";
+      else if (pushups >= ageBracket.Novice) level = "Improving";
+      else if (pushups >= ageBracket.Beginner) level = "Weak";
 
       document.getElementById("result").innerText = `Your push-up level is: ${level}`;
-    }
-
-    document.querySelector("button").addEventListener("click", evaluate);
+    });
   </script>
 </body>
 </html>
