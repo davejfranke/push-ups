@@ -1,44 +1,62 @@
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const standards = {
-      15: { Beginner: 1, Novice: 11, Intermediate: 30, Advanced: 54, Elite: 80 },
-      20: { Beginner: 1, Novice: 16, Intermediate: 39, Advanced: 66, Elite: 95 },
-      25: { Beginner: 1, Novice: 18, Intermediate: 41, Advanced: 68, Elite: 99 },
-      30: { Beginner: 1, Novice: 18, Intermediate: 41, Advanced: 68, Elite: 99 },
-      35: { Beginner: 1, Novice: 18, Intermediate: 41, Advanced: 68, Elite: 99 },
-      40: { Beginner: 1, Novice: 18, Intermediate: 41, Advanced: 68, Elite: 99 },
-      45: { Beginner: 1, Novice: 15, Intermediate: 37, Advanced: 63, Elite: 92 },
-      50: { Beginner: 1, Novice: 12, Intermediate: 33, Advanced: 57, Elite: 85 },
-      55: { Beginner: 1, Novice: 10, Intermediate: 28, Advanced: 51, Elite: 76 },
-      60: { Beginner: 1, Novice: 7, Intermediate: 23, Advanced: 44, Elite: 67 },
-      65: { Beginner: 1, Novice: 4, Intermediate: 18, Advanced: 37, Elite: 58 },
-      70: { Beginner: 1, Novice: 1, Intermediate: 13, Advanced: 30, Elite: 49 },
-      75: { Beginner: 1, Novice: 1, Intermediate: 9, Advanced: 24, Elite: 40 },
-      80: { Beginner: 1, Novice: 1, Intermediate: 6, Advanced: 18, Elite: 33 },
-      85: { Beginner: 1, Novice: 1, Intermediate: 2, Advanced: 13, Elite: 27 },
-      90: { Beginner: 1, Novice: 1, Intermediate: 1, Advanced: 9, Elite: 21 }
-    };
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Push-Up Strength Level</title>
+</head>
+<body>
+  <h1>Push-Up Strength Calculator</h1>
+  <p>Enter your age and how many push-ups you can do in one set:</p>
+  <label for="age">Age (e.g. 40): </label>
+  <input type="number" id="age" step="5" min="15" max="90"><br><br>
+  <label for="pushups">Push-Ups: </label>
+  <input type="number" id="pushups"><br><br>
+  <button>Evaluate</button>
+  <p id="result"></p>
 
-    function evaluate() {
-      const age = parseInt(document.getElementById('age').value);
-      const reps = parseInt(document.getElementById('pushups').value);
-      const ageBracket = standards[age];
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const standards = {
+        15: { Beginner: 1, Novice: 11, Intermediate: 30, Advanced: 54, Elite: 80 },
+        20: { Beginner: 1, Novice: 16, Intermediate: 39, Advanced: 66, Elite: 95 },
+        25: { Beginner: 1, Novice: 18, Intermediate: 41, Advanced: 68, Elite: 99 },
+        30: { Beginner: 1, Novice: 18, Intermediate: 41, Advanced: 68, Elite: 99 },
+        35: { Beginner: 1, Novice: 18, Intermediate: 41, Advanced: 68, Elite: 99 },
+        40: { Beginner: 1, Novice: 18, Intermediate: 41, Advanced: 68, Elite: 99 },
+        45: { Beginner: 1, Novice: 15, Intermediate: 37, Advanced: 63, Elite: 92 },
+        50: { Beginner: 1, Novice: 12, Intermediate: 33, Advanced: 57, Elite: 85 },
+        55: { Beginner: 1, Novice: 10, Intermediate: 28, Advanced: 51, Elite: 76 },
+        60: { Beginner: 1, Novice: 7, Intermediate: 23, Advanced: 44, Elite: 67 },
+        65: { Beginner: 1, Novice: 4, Intermediate: 18, Advanced: 37, Elite: 58 },
+        70: { Beginner: 1, Novice: 1, Intermediate: 13, Advanced: 30, Elite: 49 },
+        75: { Beginner: 1, Novice: 1, Intermediate: 9, Advanced: 24, Elite: 40 },
+        80: { Beginner: 1, Novice: 1, Intermediate: 6, Advanced: 18, Elite: 33 },
+        85: { Beginner: 1, Novice: 1, Intermediate: 2, Advanced: 13, Elite: 27 },
+        90: { Beginner: 1, Novice: 1, Intermediate: 1, Advanced: 9, Elite: 21 }
+      };
 
-      if (!ageBracket) {
-        document.getElementById('result').innerText = "Age must be between 15 and 90 in 5-year steps.";
-        return;
+      function evaluate() {
+        const age = parseInt(document.getElementById('age').value);
+        const reps = parseInt(document.getElementById('pushups').value);
+        const ageBracket = standards[age];
+
+        if (!ageBracket) {
+          document.getElementById('result').innerText = "Please enter an age between 15 and 90 in 5-year steps.";
+          return;
+        }
+
+        let level = "Below Weak";
+        if (reps >= ageBracket.Elite) level = "Badass";
+        else if (reps >= ageBracket.Advanced) level = "Exceeding Expectations";
+        else if (reps >= ageBracket.Intermediate) level = "Average Joe";
+        else if (reps >= ageBracket.Novice) level = "Improving";
+        else if (reps >= ageBracket.Beginner) level = "Weak";
+
+        document.getElementById('result').innerText = `Your push-up level is: ${level}`;
       }
 
-      let level = "Below Weak";
-      if (reps >= ageBracket.Elite) level = "Badass";
-      else if (reps >= ageBracket.Advanced) level = "Exceeding Expectations";
-      else if (reps >= ageBracket.Intermediate) level = "Average Joe";
-      else if (reps >= ageBracket.Novice) level = "Improving";
-      else if (reps >= ageBracket.Beginner) level = "Weak";
-
-      document.getElementById('result').innerText = `Your push-up level is: ${level}`;
-    }
-
-    document.querySelector("button").addEventListener("click", evaluate);
-  });
-</script>
+      document.querySelector("button").addEventListener("click", evaluate);
+    });
+  </script>
+</body>
+</html>
