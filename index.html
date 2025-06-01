@@ -1,24 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Push-Up Level Calculator</title>
-</head>
-<body>
-  <h1>Push-Up Level Calculator</h1>
-  <p>Enter your age and how many push-ups you can do:</p>
-
-  <label for="age">Age (15–90):</label>
-  <input type="number" id="age" min="15" max="90" step="5"><br><br>
-
-  <label for="pushups">Push-Ups:</label>
-  <input type="number" id="pushups"><br><br>
-
-  <button onclick="evaluate()">Check My Level</button>
-
-  <p id="result"></p>
-
-  <script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
     const standards = {
       15: { Beginner: 1, Novice: 11, Intermediate: 30, Advanced: 54, Elite: 80 },
       20: { Beginner: 1, Novice: 16, Intermediate: 39, Advanced: 66, Elite: 95 },
@@ -57,6 +38,7 @@
 
       document.getElementById('result').innerText = `Your push-up level is: ${level}`;
     }
-  </script>
-</body>
-</html>
+
+    document.querySelector("button").addEventListener("click", evaluate);
+  });
+</script>
