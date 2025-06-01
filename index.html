@@ -3,12 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <title>Push-Up Strength Level</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: auto;
+      padding: 20px;
+    }
+    label {
+      display: inline-block;
+      width: 100px;
+    }
+    input, select {
+      width: 100px;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+    button {
+      padding: 5px 15px;
+    }
+    #result {
+      font-weight: bold;
+      margin-top: 15px;
+    }
+  </style>
 </head>
 <body>
   <h1>Push-Up Strength Calculator</h1>
   <p>Enter your age and how many push-ups you can do in one set:</p>
-  <label for="age">Age (e.g. 40): </label>
-  <input type="number" id="age" step="5" min="15" max="90"><br><br>
+  <label for="age">Age: </label>
+  <input type="number" id="age"><br><br>
   <label for="pushups">Push-Ups: </label>
   <input type="number" id="pushups"><br><br>
   <button>Evaluate</button>
@@ -35,13 +65,44 @@
         90: { Beginner: 1, Novice: 1, Intermediate: 1, Advanced: 9, Elite: 21 }
       };
 
+      function interpolateStandards(age) {
+        const keys = Object.keys(standards).map(Number).sort((a, b) => a - b);
+        if (standards[age]) return standards[age];
+
+        const lower = keys.filter(a => a <= age).pop();
+        const upper = keys.find(a => a > age);
+
+        if (lower === undefined || upper === undefined) return null;
+
+        const result = {};
+        const lowerData = standards[lower];
+        const upperData = standards[upper];
+        const ratio = (age - lower) / (upper - lower);
+
+        for (const key in lowerData) {
+          result[key] = Math.round(lowerData[key] + ratio * (upperData[key] - lowerData[key]));
+        }
+
+        return result;
+      }
+
       function evaluate() {
         const age = parseInt(document.getElementById('age').value);
         const reps = parseInt(document.getElementById('pushups').value);
-        const ageBracket = standards[age];
 
+        if (isNaN(age) || isNaN(reps)) {
+          document.getElementById('result').innerText = "Please enter valid numbers.";
+          return;
+        }
+
+        if (reps > 100) {
+          document.getElementById('result').innerText = "You are superhuman and have broken the calculator 💥";
+          return;
+        }
+
+        const ageBracket = interpolateStandards(age);
         if (!ageBracket) {
-          document.getElementById('result').innerText = "Please enter an age between 15 and 90 in 5-year steps.";
+          document.getElementById('result').innerText = "Age out of range (15–90).";
           return;
         }
 
@@ -56,6 +117,10 @@
       }
 
       document.querySelector("button").addEventListener("click", evaluate);
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") evaluate();
+      });
     });
   </script>
 </body>
