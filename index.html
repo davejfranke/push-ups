@@ -8,7 +8,7 @@
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
-      margin: 0 auto; /* Center content and remove conflicts */
+      margin: 0 auto;
       max-width: 500px;
     }
 
@@ -165,9 +165,9 @@
 
       let level = "Below Weak";
       if (pushups >= ageBracket.Elite) level = "Super Human";
-      else if (pushups >= ageBracket.Advanced) level = "Badass";
-      else if (pushups >= ageBracket.Intermediate) level = "Solid";
-      else if (pushups >= ageBracket.Novice) level = "Improving";
+      else if (pushups >= ageBracket.Advanced) level = "Alpha";
+      else if (pushups >= ageBracket.Intermediate) level = "Badass";
+      else if (pushups >= ageBracket.Novice) level = "Solid";
       else if (pushups >= ageBracket.Beginner) level = "Weak";
 
       document.getElementById("result").innerText = `Your push-up level is: ${level}`;
