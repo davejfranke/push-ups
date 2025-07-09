@@ -8,9 +8,8 @@
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
-      margin: 0;
+      margin: 0 auto; /* Center content and remove conflicts */
       max-width: 500px;
-      margin: auto;
     }
 
     h1 {
@@ -80,4 +79,99 @@
   <input type="number" id="pushups">
 
   <div id="gender-buttons">
-    <button id="maleBtn" class="gender-btn
+    <button id="maleBtn" class="gender-btn selected">Male</button>
+    <button id="femaleBtn" class="gender-btn">Female</button>
+  </div>
+
+  <button id="evaluateBtn">Evaluate</button>
+
+  <p id="result"></p>
+
+  <script>
+    const maleStandards = {
+      15: { Beginner: 1, Novice: 11, Intermediate: 30, Advanced: 54, Elite: 80 },
+      20: { Beginner: 1, Novice: 16, Intermediate: 39, Advanced: 66, Elite: 95 },
+      25: { Beginner: 1, Novice: 18, Intermediate: 41, Advanced: 68, Elite: 99 },
+      30: { Beginner: 1, Novice: 18, Intermediate: 41, Advanced: 68, Elite: 99 },
+      35: { Beginner: 1, Novice: 18, Intermediate: 41, Advanced: 68, Elite: 99 },
+      40: { Beginner: 1, Novice: 18, Intermediate: 41, Advanced: 68, Elite: 99 },
+      45: { Beginner: 1, Novice: 15, Intermediate: 37, Advanced: 63, Elite: 92 },
+      50: { Beginner: 1, Novice: 12, Intermediate: 33, Advanced: 57, Elite: 85 },
+      55: { Beginner: 1, Novice: 10, Intermediate: 28, Advanced: 51, Elite: 76 },
+      60: { Beginner: 1, Novice: 7, Intermediate: 23, Advanced: 44, Elite: 67 },
+      65: { Beginner: 1, Novice: 4, Intermediate: 18, Advanced: 37, Elite: 58 },
+      70: { Beginner: 1, Novice: 1, Intermediate: 13, Advanced: 30, Elite: 49 },
+      75: { Beginner: 1, Novice: 1, Intermediate: 9, Advanced: 24, Elite: 40 },
+      80: { Beginner: 1, Novice: 1, Intermediate: 6, Advanced: 18, Elite: 33 },
+      85: { Beginner: 1, Novice: 1, Intermediate: 2, Advanced: 13, Elite: 27 },
+      90: { Beginner: 1, Novice: 1, Intermediate: 1, Advanced: 9, Elite: 21 }
+    };
+
+    const femaleStandards = {
+      15: { Beginner: 1, Novice: 6, Intermediate: 15, Advanced: 28, Elite: 41 },
+      20: { Beginner: 1, Novice: 8, Intermediate: 19, Advanced: 33, Elite: 46 },
+      25: { Beginner: 1, Novice: 9, Intermediate: 20, Advanced: 34, Elite: 48 },
+      30: { Beginner: 1, Novice: 9, Intermediate: 20, Advanced: 34, Elite: 48 },
+      35: { Beginner: 1, Novice: 9, Intermediate: 20, Advanced: 34, Elite: 48 },
+      40: { Beginner: 1, Novice: 9, Intermediate: 20, Advanced: 34, Elite: 48 },
+      45: { Beginner: 1, Novice: 8, Intermediate: 18, Advanced: 31, Elite: 44 },
+      50: { Beginner: 1, Novice: 7, Intermediate: 16, Advanced: 28, Elite: 40 },
+      55: { Beginner: 1, Novice: 6, Intermediate: 14, Advanced: 24, Elite: 36 },
+      60: { Beginner: 1, Novice: 5, Intermediate: 12, Advanced: 21, Elite: 32 },
+      65: { Beginner: 1, Novice: 4, Intermediate: 10, Advanced: 18, Elite: 28 },
+      70: { Beginner: 1, Novice: 3, Intermediate: 8, Advanced: 15, Elite: 24 },
+      75: { Beginner: 1, Novice: 2, Intermediate: 6, Advanced: 12, Elite: 20 },
+      80: { Beginner: 1, Novice: 2, Intermediate: 4, Advanced: 10, Elite: 17 },
+      85: { Beginner: 1, Novice: 1, Intermediate: 3, Advanced: 8, Elite: 14 },
+      90: { Beginner: 1, Novice: 1, Intermediate: 2, Advanced: 6, Elite: 12 }
+    };
+
+    let selectedGender = 'male';
+
+    document.getElementById("maleBtn").addEventListener("click", function () {
+      selectedGender = 'male';
+      this.classList.add("selected");
+      document.getElementById("femaleBtn").classList.remove("selected");
+    });
+
+    document.getElementById("femaleBtn").addEventListener("click", function () {
+      selectedGender = 'female';
+      this.classList.add("selected");
+      document.getElementById("maleBtn").classList.remove("selected");
+    });
+
+    document.getElementById("evaluateBtn").addEventListener("click", function () {
+      const ageInput = parseInt(document.getElementById("age").value);
+      const pushups = parseInt(document.getElementById("pushups").value);
+
+      if (isNaN(ageInput) || isNaN(pushups)) {
+        document.getElementById("result").innerText = "Please enter valid numbers.";
+        return;
+      }
+
+      if (pushups > 100) {
+        document.getElementById("result").innerText = "You're superhuman. You've broken the calculator!";
+        return;
+      }
+
+      const baseAge = Math.floor(ageInput / 5) * 5;
+      const standards = selectedGender === 'male' ? maleStandards : femaleStandards;
+      const ageBracket = standards[baseAge];
+
+      if (!ageBracket) {
+        document.getElementById("result").innerText = "Please enter an age between 15 and 90.";
+        return;
+      }
+
+      let level = "Below Weak";
+      if (pushups >= ageBracket.Elite) level = "Super Human";
+      else if (pushups >= ageBracket.Advanced) level = "Badass";
+      else if (pushups >= ageBracket.Intermediate) level = "Solid";
+      else if (pushups >= ageBracket.Novice) level = "Improving";
+      else if (pushups >= ageBracket.Beginner) level = "Weak";
+
+      document.getElementById("result").innerText = `Your push-up level is: ${level}`;
+    });
+  </script>
+</body>
+</html>
